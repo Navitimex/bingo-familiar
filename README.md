@@ -1,5 +1,6 @@
 cd C:\Users\kevin\bingo-familiar
 
-npm run dev
+1. npm install
+2. npm run dev
 
 http://localhost:5173
