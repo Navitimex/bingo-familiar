@@ -1,8 +1,25 @@
-import React, { useState, useCallback } from "react";
+import React, { useState, useCallback, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import db from "../firebase";
+import { ref, set, onValue } from "firebase/database";
 
 const Host = () => {
   const [numerosMarcados, setNumerosMarcados] = useState([]);
+
+  useEffect(() => {
+    const numerosRef = ref(db, "numerosMarcados");
+    const unsubscribe = onValue(numerosRef, (snapshot) => {
+      const datos = snapshot.val();
+      if (datos) {
+        setNumerosMarcados(datos);
+      } else {
+        setNumerosMarcados([]);
+      }
+    });
+
+    return () => unsubscribe(); // limpiar listener al desmontar
+  }, []);
+
   const navigate = useNavigate();
 
   const handleHome = useCallback(() => {
@@ -22,15 +39,22 @@ const Host = () => {
   };
 
   const toggleNumero = (numero) => {
-    setNumerosMarcados((prev) =>
-      prev.includes(numero)
+    setNumerosMarcados((prev) => {
+      const nuevos = prev.includes(numero)
         ? prev.filter((n) => n !== numero)
-        : [...prev, numero]
-    );
+        : [...prev, numero];
+
+      // Guarda en Firebase
+      set(ref(db, "numerosMarcados"), nuevos).catch(console.error);
+
+      return nuevos;
+    });
   };
 
   const reiniciar = () => {
     setNumerosMarcados([]);
+    localStorage.removeItem("numerosMarcados");
+    set(ref(db, "numerosMarcados"), []);
   };
 
   return (
@@ -55,11 +79,9 @@ const Host = () => {
           ))}
         </div>
         <div>
-          <p>hola</p>
           <button onClick={handleHome}> Home </button>
           <button onClick={reiniciar}> Reiniciar </button>
           <button onClick={goToCard}>🎫 Ver Cartón de Bingo</button>
-          
         </div>
       </div>
     </div>
