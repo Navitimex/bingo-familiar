@@ -1,8 +1,23 @@
-import { useState } from "react";
+//import { useState } from "react";
+import React from "react";
+import Home from "./views/home.jsx";
+import Host from "./views/host.jsx";
+import Viewer from "./views/viewer.jsx";
+import Card from "./views/card.jsx";
+import { Routes, Route } from "react-router-dom";
 import "./App.css";
 
 function App() {
-  const [numerosMarcados, setNumerosMarcados] = useState([]);
+  return (
+    <Routes>
+      <Route path="/home" element={<Home />} />
+      <Route path="/host" element={<Host />} />
+      <Route path="/viewer" element={<Viewer />} />
+      <Route path="/card" element={<Card />} />
+    </Routes>
+  )
+
+  /* const [numerosMarcados, setNumerosMarcados] = useState([]);
 
   const columnas = {
     B: Array.from({ length: 15 }, (_, i) => i + 1),
@@ -47,7 +62,6 @@ function App() {
         Reiniciar
       </button>
     </div>
-  );
+  ); */
 }
-
 export default App;
