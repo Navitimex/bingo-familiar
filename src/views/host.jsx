@@ -9,7 +9,7 @@ import { ref, set, onValue } from "firebase/database";
 const Host = () => {
   const [numerosMarcados, setNumerosMarcados] = useState([]);
   const [ultimoNumero, setUltimoNumero] = useState({ letra: "L", numero: 0 });
-  const [historial, setHistorial] = useState([{ numero: 0 }]);
+  const [historial, setHistorial] = useState([]);
 
   const [patternStates, setPatternStates] = useState({
     diagonal: false,
@@ -79,7 +79,7 @@ const Host = () => {
     setSelectedLetter("A"); // reinicia la letra
     setLetterStates({});
     setUltimoNumero({ letra: "L", numero: 0 });
-    setHistorial([{ numero: 0 }]);
+    setHistorial([]);
   };
 
   return (
