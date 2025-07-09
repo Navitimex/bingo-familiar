@@ -92,6 +92,24 @@ const Host = () => {
     return () => unsubscribe();
   }, []);
 
+  useEffect(() => {
+    if (rol === "host") {
+      set(ref(db, "selectedLetter"), selectedLetter);
+    }
+  }, [selectedLetter, rol]);
+
+  // Leer el último número desde Firebase
+  useEffect(() => {
+    const ultimoRef = ref(db, "ultimoNumero");
+    const unsubscribe = onValue(ultimoRef, (snapshot) => {
+      const data = snapshot.val();
+      if (data) {
+        setUltimoNumero(data);
+      }
+    });
+    return () => unsubscribe();
+  }, []);
+
   const obtenerLetra = (numero) => {
     if (numero >= 1 && numero <= 15) return "B";
     if (numero >= 16 && numero <= 30) return "I";
@@ -156,19 +174,21 @@ const Host = () => {
     set(ref(db, "ultimoNumero"), {});
     set(ref(db, "historialNumeros"), []);
 
-    // Limpiar los estados locales
-    setNumerosMarcados([]);
-    setclassicPatternStates({
-      diagonal: false,
-      vertical: false,
-      horizontal: false,
-      corners: false,
-      full: false,
-    });
-    setSelectedLetter("A");
-    setLetterStates({});
-    setUltimoNumero({ letra: "L", numero: 0 });
-    setHistorial([]);
+    // Limpiar estados locales con un pequeño delay para esperar a que Firebase termine
+    setTimeout(() => {
+      setNumerosMarcados([]);
+      setclassicPatternStates({
+        diagonal: false,
+        vertical: false,
+        horizontal: false,
+        corners: false,
+        full: false,
+      });
+      setSelectedLetter("A");
+      setLetterStates({});
+      setUltimoNumero({ letra: "F", numero: 0 }); // Mostrar valor limpio
+      setHistorial([]);
+    }, 300); // Espera 300ms (puedes ajustar)
   };
 
   return (
