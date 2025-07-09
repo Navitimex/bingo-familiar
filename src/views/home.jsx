@@ -10,20 +10,22 @@ const Home = () => {
 
   return (
     <div className="home">
-      <h1>🎉 Bingo Familiar 🎉</h1>
-
-      <h2>
-        El anfitrión será quien marque los números y los espectadores seguirán
-        el juego en tiempo real.
-      </h2>
-
-      <p>Por favor, elige tu rol para comenzar:</p>
-      <button className="home-buttom" onClick={() => handleRolChange("host")}>
-        🎤 Anfitrión
-      </button>
-      <button className="home-buttom" onClick={() => handleRolChange("viewer")}>
-        👀 Espectador
-      </button>
+      <div>
+        <h1> Bingo Familiar </h1>
+        <p>
+          El anfitrión será quien marque los números y los espectadores seguirán
+          el juego en tiempo real.
+        </p>
+        <p>
+          Por favor, elige tu rol para comenzar:
+        </p>
+        <button className="home-buttom" onClick={() => handleRolChange("host")}>
+          🎤 Anfitrión
+        </button>
+        <button className="home-buttom" onClick={() => handleRolChange("viewer")}>
+          👀 Espectador
+        </button>
+      </div>
     </div>
   );
 };
