@@ -1,24 +1,30 @@
 import "../assets/styles/pattern.css";
+import React from "react";
 
 // Importar todas las imágenes verdes y rojas con vite import.meta.glob
-const classicImages = import.meta.glob('../assets/images/classic/*-GREEN.png', {
+const classicImages = import.meta.glob("../assets/images/classic/*-GREEN.png", {
   eager: true,
-  import: 'default',
+  import: "default",
 });
 
-const classicRedImages = import.meta.glob('../assets/images/classic/*-RED.png', {
-  eager: true,
-  import: 'default',
-});
+const classicRedImages = import.meta.glob(
+  "../assets/images/classic/*-RED.png",
+  {
+    eager: true,
+    import: "default",
+  }
+);
 
-// Función para convertir los imports en un objeto { A: img, B: img, ... }
+// Función para extraer los patrones de las imágenes
 const parseClassic = (images) => {
   const map = {};
   Object.entries(images).forEach(([path, module]) => {
-    const match = path.match(/\/([A-ZÑ])-(GREEN|RED)\.png$/i);
+    const match = path.match(
+      /\/(diagonal|corners|horizontal|vertical|full)-(GREEN|RED)\.png$/i
+    );
     if (match) {
-      const letra = match[1].toUpperCase();
-      map[letra] = module;
+      const key = match[1].toLowerCase(); // usa el nombre del patrón como clave
+      map[key] = module;
     }
   });
   return map;
@@ -27,21 +33,21 @@ const parseClassic = (images) => {
 const greenClassic = parseClassic(classicImages);
 const redClassic = parseClassic(classicRedImages);
 
-// Si quieres, puedes construir aquí el array ordenado o hacerlo afuera y pasarlo como prop.
-const ordenDeseado = ['D', 'C', 'H', 'V', 'F', 'A'];
+// Definir el orden deseado de los patrones
+const ordenDeseado = ["diagonal", "corners", "horizontal", "vertical", "full"];
 
 const patterns = ordenDeseado
-  .map((letra) => ({
-    id: letra,
-    alt: `Letra ${letra}`,
-    green: greenClassic[letra],
-    red: redClassic[letra],
+  .map((id) => ({
+    id,
+    alt: `Patrón ${id}`,
+    green: greenClassic[id],
+    red: redClassic[id],
   }))
-  .filter((p) => p.green && p.red); // filtrar solo los que existan
+  .filter((p) => p.green && p.red);
 
 function ClassicPatterns({ patternStates, setPatternStates, rol }) {
   const togglePattern = (id) => {
-    if (rol !== 'host') return;
+    if (rol !== "host") return;
     setPatternStates((prev) => ({
       ...prev,
       [id]: !prev[id],
@@ -57,8 +63,17 @@ function ClassicPatterns({ patternStates, setPatternStates, rol }) {
             key={pattern.id}
             src={isRed ? pattern.red : pattern.green}
             alt={pattern.alt}
-            onClick={() => togglePattern(pattern.id)}
-            className={`pattern-image ${rol === 'host' ? 'host' : ''} ${isRed ? 'marked' : ''}`}
+            onClick={(e) => {
+              e.stopPropagation(); // Previene que el click se propague a elementos padres
+              togglePattern(pattern.id);
+            }}
+            className={`pattern-image ${rol === "host" ? "host" : ""} ${
+              isRed ? "marked" : ""
+            }`}
+            style={{
+              cursor: rol === "host" ? "pointer" : "default",
+              userSelect: "none",
+            }}
           />
         );
       })}

@@ -1,9 +1,33 @@
 import React, { useState, useEffect } from "react";
 import db from "../firebase";
 import { ref, onValue } from "firebase/database";
+import { useNavigate } from "react-router-dom";
+import LastNumber from "../components/lastNumber.jsx";
+import PatternSelector from "../components/patternSelector.jsx";
 
 const Viewer = () => {
   const [numerosMarcados, setNumerosMarcados] = useState([]);
+  const [ultimoNumero, setUltimoNumero] = useState({ letra: "L", numero: 0 });
+  const [historial, setHistorial] = useState([]);
+
+  // Estados de patrones clásicos
+  const [classicPatternStates, setClassicPatternStates] = useState({
+    diagonal: false,
+    vertical: false,
+    horizontal: false,
+    corners: false,
+    full: false,
+  });
+
+  const [loadedClassicPatterns, setLoadedClassicPatterns] = useState(false);
+  const [letterStates, setLetterStates] = useState({});
+  const [selectedLetter, setSelectedLetter] = useState("A");
+
+  const navigate = useNavigate();
+
+  const handleHome = () => {
+    navigate("/home");
+  };
 
   // Leer del localStorage al cargar la vista
   useEffect(() => {
@@ -18,6 +42,49 @@ const Viewer = () => {
     });
 
     // Cleanup
+    return () => unsubscribe();
+  }, []);
+
+  // Leer patrones clásicos de Firebase al iniciar
+  useEffect(() => {
+    const classicRef = ref(db, "classicPatternStates");
+    const unsubscribe = onValue(classicRef, (snapshot) => {
+      const data = snapshot.val();
+      if (data) {
+        setClassicPatternStates(data);
+      }
+      setLoadedClassicPatterns(true); // Marca que ya cargó
+    });
+    return () => unsubscribe();
+  }, []);
+
+  // Leer estados de letras
+  useEffect(() => {
+    const letterRef = ref(db, "letterStates");
+    const unsubscribe = onValue(letterRef, (snapshot) => {
+      const data = snapshot.val();
+      if (data) setLetterStates(data);
+    });
+    return () => unsubscribe();
+  }, []);
+
+  // Leer historial de números
+  useEffect(() => {
+    const historialRef = ref(db, "historialNumeros");
+    const unsubscribe = onValue(historialRef, (snapshot) => {
+      const data = snapshot.val();
+      if (data) setHistorial(data);
+    });
+    return () => unsubscribe();
+  }, []);
+
+  // Leer los ultimos numero de Firebase al iniciar
+  useEffect(() => {
+    const ultimoRef = ref(db, "ultimoNumero");
+    const unsubscribe = onValue(ultimoRef, (snapshot) => {
+      const data = snapshot.val();
+      if (data) setUltimoNumero(data);
+    });
     return () => unsubscribe();
   }, []);
 
@@ -48,6 +115,26 @@ const Viewer = () => {
               ))}
             </div>
           ))}
+        </div>
+        <div>
+          <h3>Ultimo Numero</h3>
+
+          <LastNumber
+            letra={ultimoNumero?.letra}
+            numero={ultimoNumero?.numero}
+            historial={historial}
+          />
+
+          <h2>🧩 Patrones</h2>
+          <PatternSelector
+            classicPatternStates={classicPatternStates}
+            selectedLetter={selectedLetter}
+            letterStates={letterStates}
+          />
+
+          <button className="host-buttom" onClick={handleHome}>
+            🏠 Volver al Inicio
+          </button>
         </div>
       </div>
     </div>

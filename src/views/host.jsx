@@ -11,19 +11,60 @@ const Host = () => {
   const [ultimoNumero, setUltimoNumero] = useState({ letra: "L", numero: 0 });
   const [historial, setHistorial] = useState([]);
 
-  const [patternStates, setPatternStates] = useState({
+  // Estados de patrones clásicos
+  const [classicPatternStates, setClassicPatternStates] = useState({
     diagonal: false,
     vertical: false,
     horizontal: false,
     corners: false,
     full: false,
   });
+
+  const [loadedClassicPatterns, setLoadedClassicPatterns] = useState(false);
+  const [letterStates, setLetterStates] = useState({});
   const [selectedLetter, setSelectedLetter] = useState("A");
-  const [letterStates, setLetterStates] = useState({}); // si querés manejar desactivadas
 
   const rol = localStorage.getItem("rol");
   const navigate = useNavigate();
 
+  // Guardar patrones clásicos en Firebase cuando cambien
+  useEffect(() => {
+    if (rol === "host" && loadedClassicPatterns) {
+      set(ref(db, "classicPatternStates"), classicPatternStates);
+    }
+  }, [classicPatternStates, rol, loadedClassicPatterns]);
+
+  // Leer patrones clásicos de Firebase al iniciar
+  useEffect(() => {
+    const classicRef = ref(db, "classicPatternStates");
+    const unsubscribe = onValue(classicRef, (snapshot) => {
+      const data = snapshot.val();
+      if (data) {
+        setClassicPatternStates(data);
+      }
+      setLoadedClassicPatterns(true); // Marca que ya cargó
+    });
+    return () => unsubscribe();
+  }, []);
+
+  // Guardar estados de letras
+  useEffect(() => {
+    if (rol === "host") {
+      set(ref(db, "letterStates"), letterStates);
+    }
+  }, [letterStates, rol]);
+
+  // Leer estados de letras
+  useEffect(() => {
+    const letterRef = ref(db, "letterStates");
+    const unsubscribe = onValue(letterRef, (snapshot) => {
+      const data = snapshot.val();
+      if (data) setLetterStates(data);
+    });
+    return () => unsubscribe();
+  }, []);
+
+  // Leer números marcados de Firebase al iniciar
   useEffect(() => {
     const numerosRef = ref(db, "numerosMarcados");
     const unsubscribe = onValue(numerosRef, (snapshot) => {
@@ -32,6 +73,20 @@ const Host = () => {
         setNumerosMarcados(datos);
       } else {
         setNumerosMarcados([]);
+      }
+    });
+    return () => unsubscribe();
+  }, []);
+
+  // Leer historial desde Firebase al iniciar
+  useEffect(() => {
+    const historialRef = ref(db, "historialNumeros");
+    const unsubscribe = onValue(historialRef, (snapshot) => {
+      const data = snapshot.val();
+      if (data) {
+        setHistorial(data);
+      } else {
+        setHistorial([]);
       }
     });
     return () => unsubscribe();
@@ -46,37 +101,71 @@ const Host = () => {
     return "";
   };
 
+  useEffect(() => {
+    const patternRef = ref(db, "patternStates");
+    const unsubscribe = onValue(patternRef, (snapshot) => {
+      const data = snapshot.val();
+      if (data) setPatternStates(data);
+    });
+    return () => unsubscribe();
+  }, []);
+
   const toggleNumero = (numero) => {
     if (rol !== "host") return;
 
-    const nuevos = numerosMarcados.includes(numero)
+    const yaMarcado = numerosMarcados.includes(numero);
+    const nuevos = yaMarcado
       ? numerosMarcados.filter((n) => n !== numero)
       : [...numerosMarcados, numero];
 
+    // 🔥 Actualizar en Firebase
     set(ref(db, "numerosMarcados"), nuevos);
 
-    if (!numerosMarcados.includes(numero)) {
+    // ✅ Solo actualizar el último número si fue un nuevo número marcado
+    if (!yaMarcado) {
       const letra = obtenerLetra(numero);
-      setUltimoNumero({ letra, numero });
-      setHistorial((prev) => [...prev, { letra, numero }]);
+      const nuevoUltimo = { letra, numero };
+
+      // 👉 Guardar localmente y en Firebase
+      setUltimoNumero(nuevoUltimo);
+      set(ref(db, "ultimoNumero"), nuevoUltimo);
+
+      // 👉 Actualizar historial local y remoto
+      const nuevoHistorial = [...historial, nuevoUltimo];
+      setHistorial(nuevoHistorial);
+      set(ref(db, "historialNumeros"), nuevoHistorial);
     }
   };
 
+  // Func de volver al inicio
   const handleHome = useCallback(() => {
     navigate("/home");
   }, [navigate]);
 
   const reiniciar = () => {
-    setNumerosMarcados([]);
+    // Borra los datos en Firebase
     set(ref(db, "numerosMarcados"), []);
-    setPatternStates({
+    set(ref(db, "classicPatternStates"), {
       diagonal: false,
       vertical: false,
       horizontal: false,
       corners: false,
       full: false,
     });
-    setSelectedLetter("A"); // reinicia la letra
+    set(ref(db, "letterStates"), {});
+    set(ref(db, "ultimoNumero"), {});
+    set(ref(db, "historialNumeros"), []);
+
+    // Limpiar los estados locales
+    setNumerosMarcados([]);
+    setclassicPatternStates({
+      diagonal: false,
+      vertical: false,
+      horizontal: false,
+      corners: false,
+      full: false,
+    });
+    setSelectedLetter("A");
     setLetterStates({});
     setUltimoNumero({ letra: "L", numero: 0 });
     setHistorial([]);
@@ -94,7 +183,7 @@ const Host = () => {
           />
         </div>
 
-        {/* Columna cderechaentral */}
+        {/* Columna derecha central */}
         <div>
           <h2>🎯 Último número</h2>
           <LastNumber
@@ -105,8 +194,8 @@ const Host = () => {
 
           <h2>🧩 Patrones</h2>
           <PatternSelector
-            patternStates={patternStates}
-            setPatternStates={setPatternStates}
+            classicPatternStates={classicPatternStates}
+            setClassicPatternStates={setClassicPatternStates}
             selectedLetter={selectedLetter}
             setSelectedLetter={setSelectedLetter}
             letterStates={letterStates}
@@ -114,8 +203,12 @@ const Host = () => {
             rol={rol}
           />
 
-          <button onClick={reiniciar}>🔁 Reiniciar</button>
-          <button onClick={handleHome}>🏠 Volver al Inicio</button>
+          <button className="host-buttom" onClick={reiniciar}>
+            🔁 Reiniciar
+          </button>
+          <button className="host-buttom" onClick={handleHome}>
+            🏠 Volver al Inicio
+          </button>
         </div>
       </div>
     </div>

@@ -3,8 +3,8 @@ import LetterPattern from "./letterPattern.jsx";
 import LetterSelector from "./letterSelector.jsx";
 
 const PatternSelector = ({
-  patternStates,
-  setPatternStates,
+  classicPatternStates,
+  setClassicPatternStates,
   selectedLetter,
   setSelectedLetter,
   letterStates,
@@ -15,8 +15,8 @@ const PatternSelector = ({
     <div>
       <div className="pattern-selector">
         <ClassicPatterns
-          patternStates={patternStates}
-          setPatternStates={setPatternStates}
+          patternStates={classicPatternStates}
+          setPatternStates={setClassicPatternStates}
           rol={rol}
         />
 
