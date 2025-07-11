@@ -11,7 +11,7 @@ const LetterSelector = ({ selectedLetter, setSelectedLetter, rol }) => {
 
   return (
     <div style={{ marginBottom: "1rem", display: "flex", alignItems: "center", gap: "1rem" }}>
-      <label htmlFor="letra-select">Seleccionar letra:</label>
+      <label htmlFor="letra-select">Antes de inicar selecciona una letra: </label>
       <select
         id="letra-select"
         value={selectedLetter || ""}

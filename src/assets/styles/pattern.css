@@ -1,18 +1,19 @@
 .pattern-selector {
   display: flex;
-  gap: 0.1rem;
+  gap: 0.5rem;
   justify-content: center;
+  align-items: center;
   border-radius: 8px;
-  margin-top: 30px;
+  padding: 3px;
   width: fit-content;  
-  height: 100px;   
+  height: fit-content;   
   align-items: center;
 }
 
 .pattern-image {
-  width: 200px;
-  height: 200px;
-  aspect-ratio: 1 / 1;
+  width: 250px;
+  height: 250px;
+  /*aspect-ratio: 1 / 1;*/
   object-fit: contain;
   cursor: pointer;
   border-radius: 8px;
@@ -22,7 +23,7 @@
 
 .pattern-image.marked,
 .pattern-image.disabled {
-  opacity: 0.4;
+  opacity: 0.2;
   cursor: default;
 }
 

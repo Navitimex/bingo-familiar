@@ -1,6 +1,7 @@
 import ClassicPatterns from "./ClassicPatterns.jsx";
 import LetterPattern from "./letterPattern.jsx";
 import LetterSelector from "./letterSelector.jsx";
+import placeholderImg from "../assets/images/letters/PLACEHOLDER.png";
 
 const PatternSelector = ({
   classicPatternStates,
@@ -13,34 +14,42 @@ const PatternSelector = ({
 }) => {
   return (
     <div>
-      <div className="pattern-selector">
-        <ClassicPatterns
-          patternStates={classicPatternStates}
-          setPatternStates={setClassicPatternStates}
-          rol={rol}
-        />
+      <div >
 
-        {selectedLetter ? (
-          <LetterPattern
-            selectedLetter={selectedLetter}
-            letterStates={letterStates}
-            setLetterStates={setLetterStates}
-            rol={rol}
-          />
-        ) : (
-          <p style={{ color: "gray" }}>
-            Selecciona una letra para ver el patrón.
-          </p>
-        )}
-      </div>
-
-      <div style={{ marginTop: "5rem" }}>
+        <div style={{ marginTop: "2rem" }}>
         <LetterSelector
           selectedLetter={selectedLetter}
           setSelectedLetter={setSelectedLetter}
           rol={rol}
         />
       </div>
+      
+        <ClassicPatterns
+          patternStates={classicPatternStates}
+          setPatternStates={selectedLetter ? setClassicPatternStates : () => {}}
+          rol={rol}
+        />
+
+        {selectedLetter ? (
+          <LetterPattern
+            key={selectedLetter}
+            selectedLetter={selectedLetter}
+            letterStates={letterStates}
+            setLetterStates={setLetterStates}
+            rol={rol}
+          />
+        ) : (
+          <div className="pattern-selector">
+            <img
+              src={placeholderImg}
+              alt="Selecciona una letra"
+              className="pattern-image"
+            />
+          </div>
+        )}
+      </div>
+
+      
     </div>
   );
 };

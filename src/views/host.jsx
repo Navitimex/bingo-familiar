@@ -22,7 +22,8 @@ const Host = () => {
 
   const [loadedClassicPatterns, setLoadedClassicPatterns] = useState(false);
   const [letterStates, setLetterStates] = useState({});
-  const [selectedLetter, setSelectedLetter] = useState("A");
+  const [selectedLetter, setSelectedLetter] = useState(null);
+  
 
   const rol = localStorage.getItem("rol");
   const navigate = useNavigate();
@@ -93,6 +94,19 @@ const Host = () => {
   }, []);
 
   useEffect(() => {
+    const letraRef = ref(db, "selectedLetter");
+    const unsubscribe = onValue(letraRef, (snapshot) => {
+      const data = snapshot.val();
+      if (data) {
+        setSelectedLetter(data);
+      } else {
+        setSelectedLetter(null);
+      }
+    });
+    return () => unsubscribe();
+  }, []);
+
+  useEffect(() => {
     if (rol === "host") {
       set(ref(db, "selectedLetter"), selectedLetter);
     }
@@ -105,6 +119,10 @@ const Host = () => {
       const data = snapshot.val();
       if (data) {
         setUltimoNumero(data);
+      } else {
+        //setUltimoNumero(null);
+              setUltimoNumero({ letra: "L", numero: 0 }); // 🔁 Valor por defecto
+
       }
     });
     return () => unsubscribe();
@@ -171,8 +189,10 @@ const Host = () => {
       full: false,
     });
     set(ref(db, "letterStates"), {});
-    set(ref(db, "ultimoNumero"), {});
+    //set(ref(db, "ultimoNumero"), null);
+    set(ref(db, "ultimoNumero"), { letra: "L", numero: 0 });
     set(ref(db, "historialNumeros"), []);
+    set(ref(db, "selectedLetter"), null);
 
     // Limpiar estados locales con un pequeño delay para esperar a que Firebase termine
     setTimeout(() => {
@@ -184,11 +204,15 @@ const Host = () => {
         corners: false,
         full: false,
       });
-      setSelectedLetter("A");
+      setSelectedLetter(null);
       setLetterStates({});
-      setUltimoNumero({ letra: "F", numero: 0 }); // Mostrar valor limpio
+      //setUltimoNumero(null);
+      setUltimoNumero({ letra: "L", numero: 0 });
       setHistorial([]);
+      setSelectedLetter(null);
     }, 300); // Espera 300ms (puedes ajustar)
+
+    set(ref(db, "reinicio"), Date.now()); 
   };
 
   return (
@@ -198,9 +222,14 @@ const Host = () => {
         <div>
           <BingoGrid
             numerosMarcados={numerosMarcados}
-            toggleNumero={toggleNumero}
+            toggleNumero={selectedLetter ? toggleNumero : () => {}}
             rol={rol}
           />
+          {/*           {!selectedLetter && (
+            <p style={{ color: "red" }}>
+              ⚠️ Debes seleccionar una letra para usar el bingo
+            </p>
+          )} */}
         </div>
 
         {/* Columna derecha central */}

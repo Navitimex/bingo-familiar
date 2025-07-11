@@ -21,13 +21,27 @@ const Viewer = () => {
 
   const [loadedClassicPatterns, setLoadedClassicPatterns] = useState(false);
   const [letterStates, setLetterStates] = useState({});
-  const [selectedLetter, setSelectedLetter] = useState("A");
+  const [selectedLetter, setSelectedLetter] = useState(null);
 
   const navigate = useNavigate();
 
   const handleHome = () => {
     navigate("/home");
   };
+
+  useEffect(() => {
+  const letterStatesRef = ref(db, "letterStates");
+  const unsubscribe = onValue(letterStatesRef, (snapshot) => {
+    const data = snapshot.val();
+    if (data) {
+      setLetterStates(data);
+    } else {
+      setLetterStates({});
+    }
+  });
+  return () => unsubscribe();
+}, []);
+
 
   // Leer del localStorage al cargar la vista
   useEffect(() => {
@@ -60,10 +74,12 @@ const Viewer = () => {
 
   // Leer estados de letras
   useEffect(() => {
-    const letterRef = ref(db, "letterStates");
-    const unsubscribe = onValue(letterRef, (snapshot) => {
+    const letraRef = ref(db, "selectedLetter");
+    const unsubscribe = onValue(letraRef, (snapshot) => {
       const data = snapshot.val();
-      if (data) setLetterStates(data);
+      if (data) {
+        setSelectedLetter(data);
+      }
     });
     return () => unsubscribe();
   }, []);
@@ -95,6 +111,30 @@ const Viewer = () => {
     G: Array.from({ length: 15 }, (_, i) => i + 46),
     O: Array.from({ length: 15 }, (_, i) => i + 61),
   };
+
+  useEffect(() => {
+  const reinicioRef = ref(db, "reinicio");
+  const unsubscribe = onValue(reinicioRef, (snapshot) => {
+    if (snapshot.exists()) {
+      // Reiniciar estados locales cuando el host reinicia
+      setNumerosMarcados([]);
+      setClassicPatternStates({
+        diagonal: false,
+        vertical: false,
+        horizontal: false,
+        corners: false,
+        full: false,
+      });
+      setLetterStates({});
+      setSelectedLetter(null);
+      setUltimoNumero({ letra: "L", numero: 0 });
+      setHistorial([]);
+    }
+  });
+
+  return () => unsubscribe();
+}, []);
+
 
   return (
     <div className="host">
@@ -130,6 +170,7 @@ const Viewer = () => {
             classicPatternStates={classicPatternStates}
             selectedLetter={selectedLetter}
             letterStates={letterStates}
+            rol="viewer" 
           />
 
           <button className="host-buttom" onClick={handleHome}>
