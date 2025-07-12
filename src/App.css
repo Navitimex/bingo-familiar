@@ -64,8 +64,9 @@ h1 {
 
 .grid {
   display: grid;
-  grid-template-columns: 3fr 7fr;
+  grid-template-columns: 1fr 1fr;
   gap: 20px;
+  padding: 1rem;
 }
 
 .boton-reset:hover {
@@ -147,6 +148,26 @@ img {
   transform: scale(1.05);
 }
 
+.bingo-card {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 500px; /* Ajustá según lo alto que quieras */
+  background-color: white;
+  border-radius: 12px;
+  padding: 1rem;
+  box-shadow: 0 8px 12px rgba(0, 0, 0, 0.1);
+  margin: 1rem;
+  width: 100%;
+}
+
+.bingo-grid-wrapper {
+  display: flex;
+  justify-content: center; /* Centra horizontalmente */
+  align-items: center; /* Centra verticalmente si le das altura */
+  padding: 1rem;
+}
+
 .last-number-card {
   font-size: 1.5rem;
   color: rgb(49, 49, 49);
@@ -154,7 +175,7 @@ img {
   padding: 0.4rem 1rem;
   border-radius: 12px;
   margin: 1rem 1rem;
-  max-width: 900px;
+  width: 100%;
   box-shadow: 0 8px 8px rgba(0, 0, 0, 0.1);
   font-family: "Segoe UI", sans-serif;
 }
@@ -164,9 +185,12 @@ img {
   color: rgb(49, 49, 49);
   background-color: #ffffff;
   padding: 0.4rem 1rem;
+  padding-bottom: 5rem;
   border-radius: 12px;
   margin: 1rem 1rem;
-  max-width: 900px;
+  box-shadow: 0 8px 12px rgba(0, 0, 0, 0.1);
+  font-family: "Segoe UI", sans-serif;
+  width: 100%;
 }
 
 .host-buttom {
@@ -179,7 +203,7 @@ img {
   margin: 0.5rem;
   cursor: pointer;
   transition: transform 0.2s ease, background-color 0.3s ease;
-  font-family: "Fredoka", sans-serif;
+  font-family: "Segoe UI", sans-serif;
   box-shadow: 3px 3px 3px 3px rgba(43, 88, 43, 0.562);
 }
 
@@ -221,7 +245,7 @@ img {
   margin-top: 1rem;
   cursor: pointer;
   transition: transform 0.2s ease, background-color 0.3s ease;
-  font-family: "Fredoka", sans-serif;
+  font-family: "Segoe UI", sans-serif;
   box-shadow: 0 5px 5px rgba(0, 0, 0, 0.1);
   border: none;
 }
@@ -243,6 +267,54 @@ img {
   padding: 5px 5px;
   font-size: 1rem;
   font-family: "Segoe UI", sans-serif;
+}
+
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.4);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-family: "Segoe UI", sans-serif;
+  z-index: 999;
+}
+
+.modal-card {
+  font-size: 1.5rem;
+  background-color: var(--background);
+  border-radius: 12px;
+  padding: 2rem;
+  width: 90%;
+  max-width: 400px;
+  text-align: center;
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+  animation: popIn 0.3s ease;
+  font-family: "Segoe UI", sans-serif;
+}
+
+.modal-card input {
+  padding: 0.5rem;
+  font-size: 1.2rem;
+  width: 100%;
+  margin-top: 1rem;
+  margin-bottom: 0.5rem;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+}
+
+@keyframes popIn {
+  from {
+    transform: scale(0.95);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
 }
 
 /* ☎️ Móviles muy pequeños (iPhone SE, Android chicos) */
@@ -311,6 +383,12 @@ img {
     padding: 12px 20px;
     margin: 1rem auto;
     width: 80%;
+  }
+}
+
+@media (max-width: 768px) {
+  .grid {
+    grid-template-columns: 1fr;
   }
 }
 /* Contenedor general centrado */

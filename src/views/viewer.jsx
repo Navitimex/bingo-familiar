@@ -1,16 +1,16 @@
 import React, { useState, useEffect } from "react";
-import db from "../firebase";
-import { ref, onValue } from "firebase/database";
 import { useNavigate } from "react-router-dom";
-import LastNumber from "../components/lastNumber.jsx";
+import db from "../firebase";
 import PatternSelector from "../components/patternSelector.jsx";
+import BingoGrid from "../components/bingoGrid.jsx";
+import LastNumber from "../components/lastNumber.jsx";
+import { ref, onValue } from "firebase/database";
 
 const Viewer = () => {
   const [numerosMarcados, setNumerosMarcados] = useState([]);
   const [ultimoNumero, setUltimoNumero] = useState({ letra: "L", numero: 0 });
   const [historial, setHistorial] = useState([]);
 
-  // Estados de patrones clásicos
   const [classicPatternStates, setClassicPatternStates] = useState({
     diagonal: false,
     vertical: false,
@@ -19,148 +19,105 @@ const Viewer = () => {
     full: false,
   });
 
-  const [loadedClassicPatterns, setLoadedClassicPatterns] = useState(false);
   const [letterStates, setLetterStates] = useState({});
   const [selectedLetter, setSelectedLetter] = useState(null);
 
   const navigate = useNavigate();
 
-  const handleHome = () => {
-    navigate("/home");
-  };
-
-  useEffect(() => {
-    const letterStatesRef = ref(db, "letterStates");
-    const unsubscribe = onValue(letterStatesRef, (snapshot) => {
-      const data = snapshot.val();
-      if (data) {
-        setLetterStates(data);
-      } else {
-        setLetterStates({});
-      }
-    });
-    return () => unsubscribe();
-  }, []);
-
-  // Leer del localStorage al cargar la vista
+  // Escuchar números marcados
   useEffect(() => {
     const numerosRef = ref(db, "numerosMarcados");
     const unsubscribe = onValue(numerosRef, (snapshot) => {
       const datos = snapshot.val();
-      if (datos) {
-        setNumerosMarcados(datos);
-      } else {
-        setNumerosMarcados([]);
-      }
-    });
-
-    // Cleanup
-    return () => unsubscribe();
-  }, []);
-
-  // Leer patrones clásicos de Firebase al iniciar
-  useEffect(() => {
-    const classicRef = ref(db, "classicPatternStates");
-    const unsubscribe = onValue(classicRef, (snapshot) => {
-      const data = snapshot.val();
-      if (data) {
-        setClassicPatternStates(data);
-      }
-      setLoadedClassicPatterns(true); // Marca que ya cargó
+      setNumerosMarcados(datos || []);
     });
     return () => unsubscribe();
   }, []);
 
-  // Leer estados de letras
-  useEffect(() => {
-    const letraRef = ref(db, "selectedLetter");
-    const unsubscribe = onValue(letraRef, (snapshot) => {
-      const data = snapshot.val();
-      if (data) {
-        setSelectedLetter(data);
-      }
-    });
-    return () => unsubscribe();
-  }, []);
-
-  // Leer historial de números
-  useEffect(() => {
-    const historialRef = ref(db, "historialNumeros");
-    const unsubscribe = onValue(historialRef, (snapshot) => {
-      const data = snapshot.val();
-      if (data) setHistorial(data);
-    });
-    return () => unsubscribe();
-  }, []);
-
-  // Leer los ultimos numero de Firebase al iniciar
+  // Escuchar último número
   useEffect(() => {
     const ultimoRef = ref(db, "ultimoNumero");
     const unsubscribe = onValue(ultimoRef, (snapshot) => {
       const data = snapshot.val();
-      if (data) setUltimoNumero(data);
+      setUltimoNumero(data || { letra: "L", numero: 0 });
     });
     return () => unsubscribe();
   }, []);
 
-  const columnas = {
-    B: Array.from({ length: 15 }, (_, i) => i + 1),
-    I: Array.from({ length: 15 }, (_, i) => i + 16),
-    N: Array.from({ length: 15 }, (_, i) => i + 31),
-    G: Array.from({ length: 15 }, (_, i) => i + 46),
-    O: Array.from({ length: 15 }, (_, i) => i + 61),
-  };
-
+  // Escuchar historial números
   useEffect(() => {
-    const reinicioRef = ref(db, "reinicio");
-    const unsubscribe = onValue(reinicioRef, (snapshot) => {
-      if (snapshot.exists()) {
-        // Reiniciar estados locales cuando el host reinicia
-        setNumerosMarcados([]);
-        setClassicPatternStates({
+    const historialRef = ref(db, "historialNumeros");
+    const unsubscribe = onValue(historialRef, (snapshot) => {
+      const data = snapshot.val();
+      setHistorial(data || []);
+    });
+    return () => unsubscribe();
+  }, []);
+
+  // Escuchar patrones clásicos
+  useEffect(() => {
+    const classicRef = ref(db, "classicPatternStates");
+    const unsubscribe = onValue(classicRef, (snapshot) => {
+      const data = snapshot.val();
+      setClassicPatternStates(
+        data || {
           diagonal: false,
           vertical: false,
           horizontal: false,
           corners: false,
           full: false,
-        });
-        setLetterStates({});
-        setSelectedLetter(null);
-        setUltimoNumero({ letra: "L", numero: 0 });
-        setHistorial([]);
-      }
+        }
+      );
     });
-
     return () => unsubscribe();
   }, []);
 
+  // Escuchar estados de letras
+  useEffect(() => {
+    const letterRef = ref(db, "letterStates");
+    const unsubscribe = onValue(letterRef, (snapshot) => {
+      const data = snapshot.val();
+      setLetterStates(data || {});
+    });
+    return () => unsubscribe();
+  }, []);
+
+  // Escuchar letra seleccionada
+  useEffect(() => {
+    const letraRef = ref(db, "selectedLetter");
+    const unsubscribe = onValue(letraRef, (snapshot) => {
+      const data = snapshot.val();
+      setSelectedLetter(data);
+    });
+    return () => unsubscribe();
+  }, []);
+
+  const handleHome = () => {
+    navigate("/home");
+  };
+
   return (
     <div className="host">
-      <div className="grid grid-cols-2 gap-4">
-        <div className="bingo-grid">
-          {Object.entries(columnas).map(([letra, numeros]) => (
-            <div key={letra} className="columna">
-              <div className="letra">{letra}</div>
-              {numeros.map((numero) => (
-                <div
-                  key={numero}
-                  className={`casilla ${
-                    numerosMarcados.includes(numero) ? "marcado" : ""
-                  }`}
-                >
-                  {numero}
-                </div>
-              ))}
-            </div>
-          ))}
+      {/* Usamos clase host para que tenga igual estilo */}
+      <div className="grid">
+        {/* Columna izquierda - bingo card */}
+        <div className="bingo-card">
+          <div className="bingo-grid-wrapper">
+            <BingoGrid
+              numerosMarcados={numerosMarcados}
+              rol="viewer"
+              toggleNumero={() => {}} // No hace nada en viewer
+            />
+          </div>
         </div>
+
+        {/* Columna derecha */}
         <div>
           <div className="last-number-card">
-            <h3>Ultimo Numero</h3>
-
+            <h2>Último número</h2>
             <LastNumber
-              letra={ultimoNumero?.letra}
-              numero={ultimoNumero?.numero}
+              letra={ultimoNumero.letra}
+              numero={ultimoNumero.numero}
               historial={historial}
             />
           </div>
@@ -168,14 +125,19 @@ const Viewer = () => {
             <h2>Patrones</h2>
             <PatternSelector
               classicPatternStates={classicPatternStates}
-              selectedLetter={selectedLetter}
+              setClassicPatternStates={() => {}} // no editable en viewer
               letterStates={letterStates}
+              setLetterStates={() => {}} // no editable
+              selectedLetter={selectedLetter}
+              setSelectedLetter={() => {}} // no editable
               rol="viewer"
             />
+            <div style={{ marginTop: "20px" }}>
+              <button className="home-buttom" onClick={handleHome}>
+                Volver al Inicio
+              </button>
+            </div>
           </div>
-          <button className="home-buttom" onClick={handleHome}>
-            Volver al Inicio
-          </button>
         </div>
       </div>
     </div>

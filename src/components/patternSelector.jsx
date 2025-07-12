@@ -6,10 +6,10 @@ import placeholderImg from "../assets/images/letters/PLACEHOLDER.png";
 const PatternSelector = ({
   classicPatternStates,
   setClassicPatternStates,
-  selectedLetter,
-  setSelectedLetter,
   letterStates,
   setLetterStates,
+  selectedLetter,
+  setSelectedLetter,
   rol,
 }) => {
   return (
@@ -27,6 +27,7 @@ const PatternSelector = ({
             rol={rol}
           />
         </div>
+        <h2>La letra que se esta jugando es:</h2>
 
         {selectedLetter ? (
           <LetterPattern

@@ -11,7 +11,6 @@ const Host = () => {
   const [ultimoNumero, setUltimoNumero] = useState({ letra: "L", numero: 0 });
   const [historial, setHistorial] = useState([]);
 
-  // Estados de patrones clásicos
   const [classicPatternStates, setClassicPatternStates] = useState({
     diagonal: false,
     vertical: false,
@@ -27,14 +26,13 @@ const Host = () => {
   const rol = localStorage.getItem("rol");
   const navigate = useNavigate();
 
-  // Guardar patrones clásicos en Firebase cuando cambien
+  // Sincronización Firebase: patrones clásicos
   useEffect(() => {
     if (rol === "host" && loadedClassicPatterns) {
       set(ref(db, "classicPatternStates"), classicPatternStates);
     }
   }, [classicPatternStates, rol, loadedClassicPatterns]);
 
-  // Leer patrones clásicos de Firebase al iniciar
   useEffect(() => {
     const classicRef = ref(db, "classicPatternStates");
     const unsubscribe = onValue(classicRef, (snapshot) => {
@@ -42,19 +40,18 @@ const Host = () => {
       if (data) {
         setClassicPatternStates(data);
       }
-      setLoadedClassicPatterns(true); // Marca que ya cargó
+      setLoadedClassicPatterns(true);
     });
     return () => unsubscribe();
   }, []);
 
-  // Guardar estados de letras
+  // Sincronización Firebase: letras seleccionadas
   useEffect(() => {
     if (rol === "host") {
       set(ref(db, "letterStates"), letterStates);
     }
   }, [letterStates, rol]);
 
-  // Leer estados de letras
   useEffect(() => {
     const letterRef = ref(db, "letterStates");
     const unsubscribe = onValue(letterRef, (snapshot) => {
@@ -64,7 +61,7 @@ const Host = () => {
     return () => unsubscribe();
   }, []);
 
-  // Leer números marcados de Firebase al iniciar
+  // Números marcados
   useEffect(() => {
     const numerosRef = ref(db, "numerosMarcados");
     const unsubscribe = onValue(numerosRef, (snapshot) => {
@@ -78,7 +75,7 @@ const Host = () => {
     return () => unsubscribe();
   }, []);
 
-  // Leer historial desde Firebase al iniciar
+  // Historial de números
   useEffect(() => {
     const historialRef = ref(db, "historialNumeros");
     const unsubscribe = onValue(historialRef, (snapshot) => {
@@ -92,6 +89,7 @@ const Host = () => {
     return () => unsubscribe();
   }, []);
 
+  // Letra seleccionada
   useEffect(() => {
     const letraRef = ref(db, "selectedLetter");
     const unsubscribe = onValue(letraRef, (snapshot) => {
@@ -111,7 +109,7 @@ const Host = () => {
     }
   }, [selectedLetter, rol]);
 
-  // Leer el último número desde Firebase
+  // Último número
   useEffect(() => {
     const ultimoRef = ref(db, "ultimoNumero");
     const unsubscribe = onValue(ultimoRef, (snapshot) => {
@@ -119,8 +117,7 @@ const Host = () => {
       if (data) {
         setUltimoNumero(data);
       } else {
-        //setUltimoNumero(null);
-        setUltimoNumero({ letra: "L", numero: 0 }); // 🔁 Valor por defecto
+        setUltimoNumero({ letra: "L", numero: 0 });
       }
     });
     return () => unsubscribe();
@@ -135,49 +132,34 @@ const Host = () => {
     return "";
   };
 
-  useEffect(() => {
-    const patternRef = ref(db, "patternStates");
-    const unsubscribe = onValue(patternRef, (snapshot) => {
-      const data = snapshot.val();
-      if (data) setPatternStates(data);
-    });
-    return () => unsubscribe();
-  }, []);
-
   const toggleNumero = (numero) => {
-    if (rol !== "host") return;
+    if (rol !== "host" || !selectedLetter) return;
 
     const yaMarcado = numerosMarcados.includes(numero);
     const nuevos = yaMarcado
       ? numerosMarcados.filter((n) => n !== numero)
       : [...numerosMarcados, numero];
 
-    // 🔥 Actualizar en Firebase
     set(ref(db, "numerosMarcados"), nuevos);
 
-    // ✅ Solo actualizar el último número si fue un nuevo número marcado
     if (!yaMarcado) {
       const letra = obtenerLetra(numero);
       const nuevoUltimo = { letra, numero };
 
-      // 👉 Guardar localmente y en Firebase
       setUltimoNumero(nuevoUltimo);
       set(ref(db, "ultimoNumero"), nuevoUltimo);
 
-      // 👉 Actualizar historial local y remoto
       const nuevoHistorial = [...historial, nuevoUltimo];
       setHistorial(nuevoHistorial);
       set(ref(db, "historialNumeros"), nuevoHistorial);
     }
   };
 
-  // Func de volver al inicio
   const handleHome = useCallback(() => {
     navigate("/home");
   }, [navigate]);
 
   const reiniciar = () => {
-    // Borra los datos en Firebase
     set(ref(db, "numerosMarcados"), []);
     set(ref(db, "classicPatternStates"), {
       diagonal: false,
@@ -187,28 +169,24 @@ const Host = () => {
       full: false,
     });
     set(ref(db, "letterStates"), {});
-    //set(ref(db, "ultimoNumero"), null);
     set(ref(db, "ultimoNumero"), { letra: "L", numero: 0 });
     set(ref(db, "historialNumeros"), []);
     set(ref(db, "selectedLetter"), null);
 
-    // Limpiar estados locales con un pequeño delay para esperar a que Firebase termine
     setTimeout(() => {
       setNumerosMarcados([]);
-      setclassicPatternStates({
+      setClassicPatternStates({
         diagonal: false,
         vertical: false,
         horizontal: false,
         corners: false,
         full: false,
       });
-      setSelectedLetter(null);
       setLetterStates({});
-      //setUltimoNumero(null);
+      setSelectedLetter(null);
       setUltimoNumero({ letra: "L", numero: 0 });
       setHistorial([]);
-      setSelectedLetter(null);
-    }, 300); // Espera 300ms (puedes ajustar)
+    }, 300);
 
     set(ref(db, "reinicio"), Date.now());
   };
@@ -216,16 +194,16 @@ const Host = () => {
   return (
     <div className="host">
       <div className="grid">
-        {/* Columna izquierda */}
-        <div>
-          <BingoGrid
-            numerosMarcados={numerosMarcados}
-            toggleNumero={selectedLetter ? toggleNumero : () => {}}
-            rol={rol}
-          />
+        <div className="bingo-card">
+          <div className="bingo-grid-wrapper">
+            <BingoGrid
+              numerosMarcados={numerosMarcados}
+              toggleNumero={selectedLetter ? toggleNumero : () => {}}
+              rol={rol}
+            />
+          </div>
         </div>
 
-        {/* Columna derecha central */}
         <div>
           <div className="last-number-card">
             <h2>Último número</h2>
@@ -235,6 +213,7 @@ const Host = () => {
               historial={historial}
             />
           </div>
+
           <div className="pattern-selector-card">
             <h2>Patrones</h2>
             <PatternSelector
@@ -246,15 +225,15 @@ const Host = () => {
               setSelectedLetter={setSelectedLetter}
               rol={rol}
             />
-          </div>
 
-          <div>
-            <button className="home-buttom" onClick={reiniciar}>
-              Reiniciar
-            </button>
-            <button className="home-buttom" onClick={handleHome}>
-              Volver al Inicio
-            </button>
+            <div style={{ marginTop: "20px" }}>
+              <button className="home-buttom" onClick={reiniciar}>
+                Reiniciar
+              </button>
+              <button className="home-buttom" onClick={handleHome}>
+                Volver al Inicio
+              </button>
+            </div>
           </div>
         </div>
       </div>

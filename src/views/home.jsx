@@ -56,26 +56,28 @@ const Home = () => {
       </div>
 
       {mostrarPinModal && (
-        <div className="home-card">
-          <p>🔐 Ingresar PIN de Anfitrión</p>
-          <input
-            type="password"
-            value={pinInput}
-            onChange={(e) => setPinInput(e.target.value)}
-            placeholder="PIN"
-            maxLength={4}
-          />
-          {pinError && <p className="error-message">PIN incorrecto</p>}
-          <div className="modal-button-group">
-            <button className="modal-button" onClick={verificarPin}>
-              Acceder
-            </button>
-            <button
-              className="modal-button"
-              onClick={() => setMostrarPinModal(false)}
-            >
-              Cancelar
-            </button>
+        <div className="modal-overlay">
+          <div className="modal-card">
+            <p>🔐 Ingresar PIN de Anfitrión</p>
+            <input
+              type="password"
+              value={pinInput}
+              onChange={(e) => setPinInput(e.target.value)}
+              placeholder="PIN"
+              maxLength={4}
+            />
+            {pinError && <p className="error-message">PIN incorrecto</p>}
+            <div className="modal-button-group">
+              <button className="modal-button" onClick={verificarPin}>
+                Acceder
+              </button>
+              <button
+                className="modal-button"
+                onClick={() => setMostrarPinModal(false)}
+              >
+                Cancelar
+              </button>
+            </div>
           </div>
         </div>
       )}
