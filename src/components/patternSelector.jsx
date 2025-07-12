@@ -14,21 +14,19 @@ const PatternSelector = ({
 }) => {
   return (
     <div>
-      <div >
-
-        <div style={{ marginTop: "2rem" }}>
-        <LetterSelector
-          selectedLetter={selectedLetter}
-          setSelectedLetter={setSelectedLetter}
-          rol={rol}
-        />
-      </div>
-      
+      <div>
         <ClassicPatterns
           patternStates={classicPatternStates}
           setPatternStates={selectedLetter ? setClassicPatternStates : () => {}}
           rol={rol}
         />
+        <div style={{ marginTop: "2rem" }}>
+          <LetterSelector
+            selectedLetter={selectedLetter}
+            setSelectedLetter={setSelectedLetter}
+            rol={rol}
+          />
+        </div>
 
         {selectedLetter ? (
           <LetterPattern
@@ -48,8 +46,6 @@ const PatternSelector = ({
           </div>
         )}
       </div>
-
-      
     </div>
   );
 };

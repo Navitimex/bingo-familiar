@@ -23,7 +23,6 @@ const Host = () => {
   const [loadedClassicPatterns, setLoadedClassicPatterns] = useState(false);
   const [letterStates, setLetterStates] = useState({});
   const [selectedLetter, setSelectedLetter] = useState(null);
-  
 
   const rol = localStorage.getItem("rol");
   const navigate = useNavigate();
@@ -121,8 +120,7 @@ const Host = () => {
         setUltimoNumero(data);
       } else {
         //setUltimoNumero(null);
-              setUltimoNumero({ letra: "L", numero: 0 }); // 🔁 Valor por defecto
-
+        setUltimoNumero({ letra: "L", numero: 0 }); // 🔁 Valor por defecto
       }
     });
     return () => unsubscribe();
@@ -212,7 +210,7 @@ const Host = () => {
       setSelectedLetter(null);
     }, 300); // Espera 300ms (puedes ajustar)
 
-    set(ref(db, "reinicio"), Date.now()); 
+    set(ref(db, "reinicio"), Date.now());
   };
 
   return (
@@ -225,39 +223,39 @@ const Host = () => {
             toggleNumero={selectedLetter ? toggleNumero : () => {}}
             rol={rol}
           />
-          {/*           {!selectedLetter && (
-            <p style={{ color: "red" }}>
-              ⚠️ Debes seleccionar una letra para usar el bingo
-            </p>
-          )} */}
         </div>
 
         {/* Columna derecha central */}
         <div>
-          <h2>🎯 Último número</h2>
-          <LastNumber
-            letra={ultimoNumero?.letra}
-            numero={ultimoNumero?.numero}
-            historial={historial}
-          />
+          <div className="last-number-card">
+            <h2>Último número</h2>
+            <LastNumber
+              letra={ultimoNumero?.letra}
+              numero={ultimoNumero?.numero}
+              historial={historial}
+            />
+          </div>
+          <div className="pattern-selector-card">
+            <h2>Patrones</h2>
+            <PatternSelector
+              classicPatternStates={classicPatternStates}
+              setClassicPatternStates={setClassicPatternStates}
+              letterStates={letterStates}
+              setLetterStates={setLetterStates}
+              selectedLetter={selectedLetter}
+              setSelectedLetter={setSelectedLetter}
+              rol={rol}
+            />
+          </div>
 
-          <h2>🧩 Patrones</h2>
-          <PatternSelector
-            classicPatternStates={classicPatternStates}
-            setClassicPatternStates={setClassicPatternStates}
-            selectedLetter={selectedLetter}
-            setSelectedLetter={setSelectedLetter}
-            letterStates={letterStates}
-            setLetterStates={setLetterStates}
-            rol={rol}
-          />
-
-          <button className="host-buttom" onClick={reiniciar}>
-            🔁 Reiniciar
-          </button>
-          <button className="host-buttom" onClick={handleHome}>
-            🏠 Volver al Inicio
-          </button>
+          <div>
+            <button className="home-buttom" onClick={reiniciar}>
+              Reiniciar
+            </button>
+            <button className="home-buttom" onClick={handleHome}>
+              Volver al Inicio
+            </button>
+          </div>
         </div>
       </div>
     </div>

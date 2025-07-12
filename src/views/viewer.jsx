@@ -30,18 +30,17 @@ const Viewer = () => {
   };
 
   useEffect(() => {
-  const letterStatesRef = ref(db, "letterStates");
-  const unsubscribe = onValue(letterStatesRef, (snapshot) => {
-    const data = snapshot.val();
-    if (data) {
-      setLetterStates(data);
-    } else {
-      setLetterStates({});
-    }
-  });
-  return () => unsubscribe();
-}, []);
-
+    const letterStatesRef = ref(db, "letterStates");
+    const unsubscribe = onValue(letterStatesRef, (snapshot) => {
+      const data = snapshot.val();
+      if (data) {
+        setLetterStates(data);
+      } else {
+        setLetterStates({});
+      }
+    });
+    return () => unsubscribe();
+  }, []);
 
   // Leer del localStorage al cargar la vista
   useEffect(() => {
@@ -113,28 +112,27 @@ const Viewer = () => {
   };
 
   useEffect(() => {
-  const reinicioRef = ref(db, "reinicio");
-  const unsubscribe = onValue(reinicioRef, (snapshot) => {
-    if (snapshot.exists()) {
-      // Reiniciar estados locales cuando el host reinicia
-      setNumerosMarcados([]);
-      setClassicPatternStates({
-        diagonal: false,
-        vertical: false,
-        horizontal: false,
-        corners: false,
-        full: false,
-      });
-      setLetterStates({});
-      setSelectedLetter(null);
-      setUltimoNumero({ letra: "L", numero: 0 });
-      setHistorial([]);
-    }
-  });
+    const reinicioRef = ref(db, "reinicio");
+    const unsubscribe = onValue(reinicioRef, (snapshot) => {
+      if (snapshot.exists()) {
+        // Reiniciar estados locales cuando el host reinicia
+        setNumerosMarcados([]);
+        setClassicPatternStates({
+          diagonal: false,
+          vertical: false,
+          horizontal: false,
+          corners: false,
+          full: false,
+        });
+        setLetterStates({});
+        setSelectedLetter(null);
+        setUltimoNumero({ letra: "L", numero: 0 });
+        setHistorial([]);
+      }
+    });
 
-  return () => unsubscribe();
-}, []);
-
+    return () => unsubscribe();
+  }, []);
 
   return (
     <div className="host">
@@ -157,24 +155,26 @@ const Viewer = () => {
           ))}
         </div>
         <div>
-          <h3>Ultimo Numero</h3>
+          <div className="last-number-card">
+            <h3>Ultimo Numero</h3>
 
-          <LastNumber
-            letra={ultimoNumero?.letra}
-            numero={ultimoNumero?.numero}
-            historial={historial}
-          />
-
-          <h2>🧩 Patrones</h2>
-          <PatternSelector
-            classicPatternStates={classicPatternStates}
-            selectedLetter={selectedLetter}
-            letterStates={letterStates}
-            rol="viewer" 
-          />
-
-          <button className="host-buttom" onClick={handleHome}>
-            🏠 Volver al Inicio
+            <LastNumber
+              letra={ultimoNumero?.letra}
+              numero={ultimoNumero?.numero}
+              historial={historial}
+            />
+          </div>
+          <div className="pattern-selector-card">
+            <h2>Patrones</h2>
+            <PatternSelector
+              classicPatternStates={classicPatternStates}
+              selectedLetter={selectedLetter}
+              letterStates={letterStates}
+              rol="viewer"
+            />
+          </div>
+          <button className="home-buttom" onClick={handleHome}>
+            Volver al Inicio
           </button>
         </div>
       </div>

@@ -44,14 +44,14 @@ const Home = () => {
           className="home-buttom"
           onClick={() => setMostrarPinModal(true)}
         >
-          🎤 Anfitrión
+          Anfitrión
         </button>
 
         <button
           className="home-buttom"
           onClick={() => handleRolChange("viewer")}
         >
-          👀 Espectador
+          Espectador
         </button>
       </div>
 
@@ -65,11 +65,7 @@ const Home = () => {
             placeholder="PIN"
             maxLength={4}
           />
-          {pinError && (
-            <p className="error-message">
-              PIN incorrecto
-            </p>
-          )}
+          {pinError && <p className="error-message">PIN incorrecto</p>}
           <div className="modal-button-group">
             <button className="modal-button" onClick={verificarPin}>
               Acceder
