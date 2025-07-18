@@ -207,7 +207,7 @@ const Host = () => {
       {/* Sidebar a la derecha (35%) */}
       <div className="viewer-sidebar">
         <div className="last-number-card">
-          <h2>Último número</h2>
+          <h2>Últimos Números</h2>
           <LastNumber
             letra={ultimoNumero?.letra}
             numero={ultimoNumero?.numero}
@@ -216,7 +216,7 @@ const Host = () => {
         </div>
 
         <div className="pattern-selector-card">
-          <h2>Patrones</h2>
+          <h2>Patrones en Juego</h2>
           <PatternSelector
             classicPatternStates={classicPatternStates}
             setClassicPatternStates={setClassicPatternStates}
@@ -227,15 +227,14 @@ const Host = () => {
             rol="host"
           />
 
-          <div style={{ marginTop: "20px", display: "flex", gap: "1rem" }}>
+          <div style={{ display: "flex", gap: "10px" }}>
             <button className="home-buttom" onClick={reiniciar}>
               Reiniciar
             </button>
             <button className="home-buttom" onClick={handleHome}>
-              Volver al Inicio
+              Inicio
             </button>
           </div>
-          
         </div>
       </div>
     </div>

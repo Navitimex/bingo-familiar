@@ -334,6 +334,11 @@ img {
     overflow-y: auto; /* scroll interno en la sidebar si hace falta */
     box-sizing: border-box;
   }
+    .home-buttom {
+    padding: 8px 16px;
+    margin-right: 10px;
+    font-size: 1rem;
+  }
 }
 
 /* --------------------------------------------------
