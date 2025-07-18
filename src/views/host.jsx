@@ -192,48 +192,48 @@ const Host = () => {
   };
 
   return (
-    <div className="host">
-      <div className="grid">
-        <div className="bingo-card">
-          <div className="bingo-grid-wrapper">
-            <BingoGrid
-              numerosMarcados={numerosMarcados}
-              toggleNumero={selectedLetter ? toggleNumero : () => {}}
-              rol={rol}
-            />
-          </div>
+    <div className="viewer-layout">
+      {/* Bingo grande a la izquierda (65%) */}
+      <div className="bingo-card">
+        <div className="bingo-grid-wrapper">
+          <BingoGrid
+            numerosMarcados={numerosMarcados}
+            rol="host"
+            toggleNumero={selectedLetter ? toggleNumero : () => {}}
+          />
+        </div>
+      </div>
+
+      {/* Sidebar a la derecha (35%) */}
+      <div className="viewer-sidebar">
+        <div className="last-number-card">
+          <h2>Último número</h2>
+          <LastNumber
+            letra={ultimoNumero?.letra}
+            numero={ultimoNumero?.numero}
+            historial={historial}
+          />
         </div>
 
-        <div>
-          <div className="last-number-card">
-            <h2>Último número</h2>
-            <LastNumber
-              letra={ultimoNumero?.letra}
-              numero={ultimoNumero?.numero}
-              historial={historial}
-            />
-          </div>
+        <div className="pattern-selector-card">
+          <h2>Patrones</h2>
+          <PatternSelector
+            classicPatternStates={classicPatternStates}
+            setClassicPatternStates={setClassicPatternStates}
+            letterStates={letterStates}
+            setLetterStates={setLetterStates}
+            selectedLetter={selectedLetter}
+            setSelectedLetter={setSelectedLetter}
+            rol="host"
+          />
 
-          <div className="pattern-selector-card">
-            <h2>Patrones</h2>
-            <PatternSelector
-              classicPatternStates={classicPatternStates}
-              setClassicPatternStates={setClassicPatternStates}
-              letterStates={letterStates}
-              setLetterStates={setLetterStates}
-              selectedLetter={selectedLetter}
-              setSelectedLetter={setSelectedLetter}
-              rol={rol}
-            />
-
-            <div style={{ marginTop: "20px" }}>
-              <button className="home-buttom" onClick={reiniciar}>
-                Reiniciar
-              </button>
-              <button className="home-buttom" onClick={handleHome}>
-                Volver al Inicio
-              </button>
-            </div>
+          <div style={{ marginTop: "20px", display: "flex", gap: "1rem" }}>
+            <button className="home-buttom" onClick={reiniciar}>
+              Reiniciar
+            </button>
+            <button className="home-buttom" onClick={handleHome}>
+              Volver al Inicio
+            </button>
           </div>
         </div>
       </div>

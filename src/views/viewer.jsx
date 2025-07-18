@@ -97,46 +97,42 @@ const Viewer = () => {
   };
 
   return (
-    <div className="host">
-      {/* Usamos clase host para que tenga igual estilo */}
-      <div className="grid">
-        {/* Columna izquierda - bingo card */}
-        <div className="bingo-card">
-          <div className="bingo-grid-wrapper">
-            <BingoGrid
-              numerosMarcados={numerosMarcados}
-              rol="viewer"
-              toggleNumero={() => {}} // No hace nada en viewer
-            />
-          </div>
+    <div className="viewer-layout">
+      <div className="bingo-card">
+        <div className="bingo-grid-wrapper">
+          <BingoGrid
+            numerosMarcados={numerosMarcados}
+            rol="viewer"
+            toggleNumero={() => {}} // No hace nada en viewer
+          />
         </div>
+      </div>
 
-        {/* Columna derecha */}
-        <div>
-          <div className="last-number-card">
-            <h2>Último número</h2>
-            <LastNumber
-              letra={ultimoNumero.letra}
-              numero={ultimoNumero.numero}
-              historial={historial}
-            />
-          </div>
-          <div className="pattern-selector-card">
-            <h2>Patrones</h2>
-            <PatternSelector
-              classicPatternStates={classicPatternStates}
-              setClassicPatternStates={() => {}} // no editable en viewer
-              letterStates={letterStates}
-              setLetterStates={() => {}} // no editable
-              selectedLetter={selectedLetter}
-              setSelectedLetter={() => {}} // no editable
-              rol="viewer"
-            />
-            <div style={{ marginTop: "20px" }}>
-              <button className="home-buttom" onClick={handleHome}>
-                Volver al Inicio
-              </button>
-            </div>
+      <div className="viewer-sidebar">
+        <div className="last-number-card">
+          <h2>Último número</h2>
+          <LastNumber
+            letra={ultimoNumero.letra}
+            numero={ultimoNumero.numero}
+            historial={historial}
+          />
+        </div>
+        <div className="pattern-selector-card">
+          <h2>Patrones</h2>
+          <PatternSelector
+            classicPatternStates={classicPatternStates}
+            setClassicPatternStates={() => {}}
+            letterStates={letterStates}
+            setLetterStates={() => {}}
+            selectedLetter={selectedLetter}
+            setSelectedLetter={() => {}}
+            rol="viewer"
+          />
+
+          <div style={{ marginTop: "20px" }}>
+            <button className="home-buttom" onClick={handleHome}>
+              Volver al Inicio
+            </button>
           </div>
         </div>
       </div>
