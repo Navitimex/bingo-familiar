@@ -1,61 +1,79 @@
-.ultimo-contenedor {
-  display: flex;
-  align-items: center;
-  gap: 20px;
-  margin-bottom: 20px;
+/* ==============================
+   Fichas: Último número + 2 anteriores
+   Con box‑shadow y totalmente responsive
+================================= */
+
+/* Tarjeta contenedora (mantén tu shadow original) */
+.last-number-card {
+  width: 100%;
+  background-color: white;
+  border-radius: 12px;
+  box-shadow: 0 8px 8px rgba(0, 0, 0, 0.1);
+  padding: 1rem;
+  box-sizing: border-box;
+  margin-bottom: 1rem;
+  overflow: hidden;
 }
 
+/* Contenedor de fichas, fila centrada */
+.ultimo-contenedor {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 1rem;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+/* — Última ficha (la más grande) — */
 .ultimo-numero {
+  flex: 0 0 auto;
   background-color: var(--card-bg);
   border: 2px solid var(--border);
-  padding: 20px 40px;
   border-radius: 10px;
-  color: var(--text);
-  text-align: center;
-  white-space: nowrap;
+  box-shadow: 0 8px 8px rgba(0, 0, 0, 0.1);
+  padding: clamp(1rem, 2vw, 1.5rem);
+  width: clamp(100px, 25vw, 150px);
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  line-height: 1;
+  white-space: nowrap;
+  box-sizing: border-box;
 }
 
+/* Letra escalable */
 .ultimo-numero .letra {
-  font-size: 4rem;
+  font-size: clamp(2rem, 6vw, 4rem);
   font-weight: bold;
-  margin-bottom: 8px;
+  margin-bottom: 0.5rem;
   text-align: center;
   width: 100%;
 }
 
+/* Número escalable */
 .ultimo-numero .numero {
-  font-size: 6rem;
-  font-weight: regular;
+  font-size: clamp(2.5rem, 8vw, 6rem);
+  font-weight: 400;
+  text-align: center;
 }
 
+/* — Fichas anteriores (2) — */
 .anteriores {
   display: flex;
-  gap: 10px;
+  gap: 0.5rem;
 }
 
+/* Cada ficha anterior con shadow y responsive */
 .anteriores span {
+  flex: 0 0 auto;
   background-color: var(--card-bg);
   border: 2px solid var(--border);
   border-radius: 10px;
-  padding: 12px 20px;
-  font-size: 2rem;
-  color: var(--text);
-  text-align: center;
-  min-width: 60px;
-}
-
-.last-number-card {
-  background-color: white;
-  border-radius: 12px;
-  margin-top: 1%;
   box-shadow: 0 8px 8px rgba(0, 0, 0, 0.1);
-  padding: 1rem;
-  padding-bottom: 5%;
-  margin-bottom: 1rem;
+  padding: clamp(0.5rem, 1.5vw, 1rem);
+  width: clamp(60px, 12vw, 90px);
+  font-size: clamp(1rem, 4vw, 2rem);
+  text-align: center;
   box-sizing: border-box;
 }

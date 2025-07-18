@@ -252,16 +252,18 @@ img {
   border: 1px solid #ccc;
 }
 
+/* 1) Mobile (vertical): siempre apilado */
 .viewer-layout {
   display: flex;
-  flex-direction: row;
-  align-items: stretch;
-  gap: 1rem; /* Esto separa la izquierda de la derecha */
+  flex-direction: column;
   width: 100%;
-  height: 100%;
+  height: 100vh;
+  padding: 1rem;
   box-sizing: border-box;
-  background-color: rgb(213, 235, 221);
-  padding: 1.5rem;
+  gap: 0.5rem;
+  overflow-y: auto; /* habilita scroll vertical */
+  -webkit-overflow-scrolling: touch; /* para un scroll más suave en iOS */
+  background-color: #d5ebdd;
 }
 
 .viewer-sidebar {
@@ -273,112 +275,104 @@ img {
   flex: 0 0 35%;
   background-color: white;
   padding: 1.5rem;
+  padding-left: 10px;
   border-radius: 12px;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
   box-sizing: border-box;
+  margin-bottom: 1.5%;
+}
+.bingo-card,
+.viewer-sidebar {
+  width: 100%;
+  flex: none;
+  box-sizing: border-box;
+  padding-left: 5px;
 }
 
-/* a) Móviles muy pequeños (≤ 480px) – vertical total */
-@media (max-width: 480px) {
-  .viewer-layout {
-    flex-direction: column;
-    padding: 1rem 5%;
-    gap: 1rem;
-    height: auto;
-  }
-
-  .bingo-card,
-  .viewer-sidebar {
-    width: 100%;
-    padding: 0.5rem;
-    box-sizing: border-box;
-    margin: 0;
-  }
-
-  .bingo-grid {
-    gap: 2px; /* un poco más apretado */
-  }
+/* 1) Mobile‑first: vertical con scroll global */
+.viewer-layout {
+  display: flex;
+  flex-direction: column;
+  height: 100vh; /* llena toda la altura */
+  overflow-y: auto; /* permite bajar para ver toda la sidebar */
+  padding: 1rem;
+  gap: 1rem;
+  box-sizing: border-box;
 }
 
-/* b) Móviles y phablets (481px – 767px) – vertical con scroll horizontal */
-@media (min-width: 481px) and (max-width: 767px) {
+/* Aseguramos que sus hijos puedan encoger */
+.bingo-card,
+.viewer-sidebar {
+  min-height: 0;
+}
+
+/* 2) Tablet+ (>=768px): dos columnas, scroll interno */
+@media (min-width: 768px) {
   .viewer-layout {
-    flex-direction: column;
-    padding: 1rem 5%;
-    gap: 1rem;
-    height: auto;
+    flex-direction: row;
+    height: 100vh;
+    overflow: hidden; /* quita scroll global */
   }
 
   .bingo-card {
-    width: 100%;
-    padding: 1rem;
-    box-sizing: border-box;
+    flex: 0 0 65%;
+    padding: 1.5rem;
+    overflow-y: auto; /* scroll dentro de bingo si hace falta */
+    min-height: 0;
   }
 
   .viewer-sidebar {
-    width: 100%;
-    padding: 1rem;
+    flex: 0 0 35%;
+    padding: 1.5rem;
+    overflow-y: auto; /* scroll dentro de sidebar si hace falta */
+    min-height: 0;
   }
 }
-
-/* Ajustes refinados para tablets en horizontal (768px–1023px) */
+/* --------------------------------------------------
+   Ajustes refinados para tablets en horizontal
+   (entre 768px y 1023px)
+-------------------------------------------------- */
 @media (min-width: 768px) and (max-width: 1023px) {
-  /* Layout más apretado pero legible */
+  /* layout más compacto */
   .viewer-layout {
-    padding: 0.5rem 3%;
-    gap: 0.75rem; /* un poco más de espacio que en móvil */
+    padding: 0.5rem 2%;
+    gap: 0.3rem;
   }
+
+  /* padding intermedio en ambas columnas */
   .bingo-card,
   .viewer-sidebar {
-    padding: 0.75rem; /* padding intermedio */
+    padding: 0.4rem;
   }
 
-  /* Grid: celdas nunca por debajo de 56px y escalan */
+  /* grid ligeramente apretado, celdas mínimas de 56px */
   .bingo-grid {
     grid-template-columns: repeat(5, minmax(56px, 1fr));
     grid-auto-rows: minmax(56px, 1fr);
     gap: 6px;
   }
 
-  /* Fuente de las celdas un punto más pequeño */
+  /* casillas con fuente un punto más pequeña */
   .casilla {
     font-size: 1.2rem;
+    padding: 0.5rem;
   }
 
-  /* Patrones: cada imagen ocupa un 18% del ancho del contenedor */
+  /* patrones mejor calibrados para no crecer demasiado */
   .pattern-selector {
     gap: 0.5rem;
   }
+
   .pattern-selector .pattern-image {
     flex: 0 0 calc(18% - 0.5rem);
     max-width: 100%;
     height: auto;
+    object-fit: contain;
   }
 
-  /* Botones para que queden alineados y no crezcan */
+  /* botones compactos */
   .home-buttom {
     padding: 8px 16px;
     font-size: 1rem;
-  }
-}
-
-/* d) Desktop y TV (≥ 1024px) – horizontal amplio */
-@media (min-width: 1024px) {
-  .viewer-layout {
-    flex-direction: row;
-    padding: 1rem 8%;
-    gap: 1.5rem;
-    align-items: stretch;
-    height: 100vh;
-  }
-
-  .bingo-card {
-    flex: 0 0 65%;
-    padding: 1.5rem;
-  }
-
-  .viewer-sidebar {
-    flex: 0 0 35%;
-    padding: 1.5rem;
   }
 }

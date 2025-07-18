@@ -235,6 +235,7 @@ const Host = () => {
               Volver al Inicio
             </button>
           </div>
+          
         </div>
       </div>
     </div>

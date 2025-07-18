@@ -1,15 +1,16 @@
 .pattern-selector {
   display: flex;
   flex-wrap: wrap;
-  gap: 0.5rem;
   justify-content: center;
-  box-sizing: border-box;
+  gap: 0.5rem;
   width: 100%;
+  box-sizing: border-box;
 }
 
 .pattern-image {
-  flex: 1 1 calc(20% - 0.5rem); /* 5 imágenes de ancho ≈ 20% cada una menos gap */
-  max-width: 100%;
+  flex: 0 0 auto;
+  /* nunca más grandes que 80px, ni más pequeños que 40px, y responden al ancho */
+  width: clamp(40px, 60%, 80px);
   height: auto;
   object-fit: contain;
   border-radius: 8px;
