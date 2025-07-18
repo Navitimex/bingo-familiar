@@ -54,7 +54,7 @@ const Home = () => {
           Espectador
         </button>
       </div>
-      <p>Version 1.1.2</p>
+      <p>Version 1.1.3</p>
       {mostrarPinModal && (
         <div className="modal-overlay">
           <div className="modal-card">
