@@ -42,8 +42,11 @@
 .pattern-selector-card {
   width: 100%; /* ✅ Muy importante */
   background-color: white;
-  padding: 2rem;
+  padding: 1rem;
   border-radius: 12px;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  box-sizing: border-box;
+  flex: 1 1 auto; /* ocupa todo el espacio sobrante */
+  overflow-y: auto; /* scroll interno aquí */
   box-sizing: border-box;
 }
