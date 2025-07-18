@@ -2,7 +2,7 @@ import "../assets/styles/number.css";
 
 const LastNumber = ({ letra, numero, historial }) => {
   const esInicial = letra === " " && numero === "FREE";
-  const prev4 = historial.slice(-4, -1).reverse();
+  const prev4 = historial.slice(-3, -1).reverse();
 
   // 👉 Nuevo: si letra o número no están definidos, mostrar mensaje
   const datosIncompletos = letra == null || numero == null;
