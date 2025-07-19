@@ -12,6 +12,7 @@ const PatternSelector = ({
   setSelectedLetter,
   rol,
 }) => {
+
   return (
     <div>
       <div>
@@ -20,33 +21,30 @@ const PatternSelector = ({
           setPatternStates={selectedLetter ? setClassicPatternStates : () => {}}
           rol={rol}
         />
-        <div style={{ marginTop: "2rem" }}>
-          <LetterSelector
-            selectedLetter={selectedLetter}
-            setSelectedLetter={setSelectedLetter}
-            rol={rol}
+        <LetterSelector
+          selectedLetter={selectedLetter}
+          setSelectedLetter={setSelectedLetter}
+          rol={rol}
+        />
+      </div>
+      <p>La letra que se esta jugando es:</p>
+      {selectedLetter ? (
+        <LetterPattern
+          key={selectedLetter}
+          selectedLetter={selectedLetter}
+          letterStates={letterStates}
+          setLetterStates={setLetterStates}
+          rol={rol}
+        />
+      ) : (
+        <div className="pattern-selector">
+          <img
+            src={placeholderImg}
+            alt="Selecciona una letra"
+            className="pattern-image"
           />
         </div>
-        <h2>La letra que se esta jugando es:</h2>
-
-        {selectedLetter ? (
-          <LetterPattern
-            key={selectedLetter}
-            selectedLetter={selectedLetter}
-            letterStates={letterStates}
-            setLetterStates={setLetterStates}
-            rol={rol}
-          />
-        ) : (
-          <div className="pattern-selector">
-            <img
-              src={placeholderImg}
-              alt="Selecciona una letra"
-              className="pattern-image"
-            />
-          </div>
-        )}
-      </div>
+      )}
     </div>
   );
 };
