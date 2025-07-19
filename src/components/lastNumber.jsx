@@ -4,17 +4,6 @@ const LastNumber = ({ letra, numero, historial }) => {
   const esInicial = letra === " " && numero === "FREE";
   const prev4 = historial.slice(-3, -1).reverse();
 
-  // 👉 Nuevo: si letra o número no están definidos, mostrar mensaje
-  const datosIncompletos = letra == null || numero == null;
-
-  if (datosIncompletos) {
-    return (
-      <div className="ultimo-contenedor">
-        <p style={{ color: "gray" }}>🎲 Aún no se ha marcado ningún número</p>
-      </div>
-    );
-  }
-
   return (
     <div className="ultimo-contenedor">
       <div className="ultimo-numero">
