@@ -40,19 +40,20 @@ const Home = () => {
           el juego en tiempo real.
         </p>
         <p>Por favor, elige tu rol para comenzar:</p>
-        <button
-          className="home-buttom"
-          onClick={() => setMostrarPinModal(true)}
-        >
-          Anfitrión
-        </button>
-
-        <button
-          className="home-buttom"
-          onClick={() => handleRolChange("viewer")}
-        >
-          Espectador
-        </button>
+        <div className="home-buttom-group">
+          <button
+            className="home-buttom"
+            onClick={() => setMostrarPinModal(true)}
+          >
+            Anfitrión
+          </button>
+          <button
+            className="home-buttom"
+            onClick={() => handleRolChange("viewer")}
+          >
+            Espectador
+          </button>
+        </div>
       </div>
       <p>Version 1.1.3</p>
       {mostrarPinModal && (

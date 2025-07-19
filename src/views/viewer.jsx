@@ -129,7 +129,7 @@ const Viewer = () => {
             rol="viewer"
           />
 
-          <div style={{ marginTop: "20px" }}>
+          <div className="home-buttom-group">
             <button className="home-buttom" onClick={handleHome}>
               Volver al Inicio
             </button>
