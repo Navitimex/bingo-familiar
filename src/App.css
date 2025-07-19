@@ -41,7 +41,7 @@ html,
   display: flex;
   flex-direction: column;
   height: 100vh;
-  padding: 20px;
+  padding: 5px;
   justify-content: space-between;
   align-items: center;
 }
@@ -62,13 +62,21 @@ h1 {
   color: var(--text);
 }
 
+h2 {
+  font-size: 1.5rem;
+  text-align: left;
+  margin: 10px 0;
+  color: var(--text);
+}
+
 .grid {
   width: 100%;
   height: 100%;
   display: grid;
   grid-template-columns: repeat(5, 1fr);
   grid-auto-rows: 1fr;
-  gap: 8px; /* espacio entre celdas */
+  gap: 8px;
+  /* espacio entre celdas */
 }
 
 .boton-reset:hover {
@@ -129,6 +137,12 @@ img {
   max-width: 900px;
   box-shadow: 0 8px 8px rgba(0, 0, 0, 0.1);
   font-family: "Segoe UI", sans-serif;
+}
+
+.home-buttom-group {
+  display: flex;
+  justify-content: center;
+
 }
 
 .home-buttom {
@@ -208,6 +222,21 @@ img {
   margin-top: 1rem;
 }
 
+
+.modal-card select {
+  padding: 0.5rem 1rem;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  font-size: 1rem;
+  width: 100%;
+  background-color: #f9f9f9;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-family: "Segoe UI", sans-serif;
+  text-align: center;
+}
+
+
 .error-message {
   color: #b71c1c;
   padding: 5px 5px;
@@ -271,16 +300,14 @@ img {
   flex-direction: column;
   justify-content: flex-start;
   gap: 1rem;
-  margin-top: 1%;
   flex: 0 0 35%;
-  background-color: white;
   padding: 1.5rem;
   padding-left: 10px;
   border-radius: 12px;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
   box-sizing: border-box;
   margin-bottom: 1.5%;
 }
+
 .bingo-card,
 .viewer-sidebar {
   width: 100%;
@@ -306,6 +333,7 @@ img {
 .viewer-sidebar {
   min-height: 0;
 }
+
 /* 2) Tablet+ (>=768px): dos columnas, scroll vertical global */
 @media (min-width: 768px) {
   .viewer-layout {

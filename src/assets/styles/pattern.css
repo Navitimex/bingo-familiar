@@ -36,7 +36,7 @@
   gap: 1rem;
   align-items: center;
   flex-wrap: wrap;
-  margin-bottom: 1rem;
+  margin-bottom: 0.5rem;
 }
 
 .pattern-selector-card {
@@ -46,7 +46,6 @@
   border-radius: 12px;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
   box-sizing: border-box;
-  flex: 1 1 auto; /* ocupa todo el espacio sobrante */
   overflow-y: auto; /* scroll interno aquí */
-  box-sizing: border-box;
+  height: fit-content;
 }
