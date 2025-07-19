@@ -2,9 +2,34 @@
 import React, { useCallback, useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
-
-const todasLasLetras = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("");
-
+const todasLasLetras = [
+  "A",
+  "B",
+  "C",
+  "D",
+  "E",
+  "F",
+  "G",
+  "H",
+  "I",
+  "J",
+  "K",
+  "L",
+  "M",
+  "N",
+  "O",
+  "P",
+  "Q",
+  "R",
+  "S",
+  "T",
+  "U",
+  "V",
+  "W",
+  "X",
+  "Y",
+  "Z",
+];
 
 const LetterSelector = ({ selectedLetter, setSelectedLetter, rol }) => {
 
@@ -17,18 +42,20 @@ const LetterSelector = ({ selectedLetter, setSelectedLetter, rol }) => {
     }
   }, [rol, selectedLetter]);
 
-  const handlePlay = () => {
-    if (selectedLetter) {
-      console.log("Letra seleccionada:", selectedLetter);
-      setShowModal(false); // cierra el modal
-    }
-  }
-
   const handleHome = useCallback(() => {
     navigate("/home");
   }, [navigate]);
 
-  if (rol !== "host") return null;
+  const handleSelectChange = (e) => {
+    const letra = e.target.value;
+    setSelectedLetter(letra);
+    if (letra) {
+      setShowModal(false); // ⬅️ Cierra el modal al seleccionar
+    }
+  };
+
+  if (rol !== "host" || !showModal) return null;
+
 
   return (
     <div
@@ -45,7 +72,7 @@ const LetterSelector = ({ selectedLetter, setSelectedLetter, rol }) => {
           <select
             id="letra-select"
             value={selectedLetter || ""}
-            onChange={(e) => setSelectedLetter(e.target.value)}
+            onChange={handleSelectChange}
             required
           >
             <option
@@ -59,9 +86,7 @@ const LetterSelector = ({ selectedLetter, setSelectedLetter, rol }) => {
             ))}
           </select>
           <div className="modal-button-group">
-            <button className="modal-button" onClick={handlePlay}>
-              Jugar
-            </button>
+
             <button
               className="modal-button" onClick={handleHome}>
               Inicio
