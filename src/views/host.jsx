@@ -229,7 +229,7 @@ const Host = () => {
 
           <div className="home-buttom-group">
             <button className="home-buttom" onClick={reiniciar}>
-              Reiniciar
+              Nuevo juego
             </button>
             <button className="home-buttom" onClick={handleHome}>
               Inicio
